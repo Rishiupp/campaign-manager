@@ -1,0 +1,28 @@
+{
+  "name": "campaign-manager",
+  "version": "1.0.0",
+  "description": "Open-source, self-hosted multi-channel campaign platform. Email, SMS & RCS from one console.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently --names server,client --prefix-colors cyan,magenta \"npm run server\" \"npm run client\"",
+    "server": "cd server && node server.js",
+    "client": "cd client && npm run dev",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build"
+  },
+  "keywords": [
+    "campaign-manager",
+    "email-marketing",
+    "sms",
+    "rcs",
+    "twilio",
+    "razorpay",
+    "open-source"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
