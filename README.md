@@ -4,7 +4,7 @@
 
 <h1 align="center">Campaign Manager</h1>
 
-<p align="center">
+<p align="center">xczxc
   <strong>Open-source, self-hosted multi-channel campaign platform.</strong><br/>
   Upload contacts → Pick a template → Launch emails, SMS & RCS — all from one console.
 </p>
