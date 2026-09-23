@@ -30,6 +30,11 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/api/settings', settingsRoutes);
 
+// Import workers to run them in the same process
+import './workers/emailWorker.js';
+import './workers/smsWorker.js';
+import './workers/rcsWorker.js';
+
 // Basic Health Check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

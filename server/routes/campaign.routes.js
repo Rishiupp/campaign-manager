@@ -60,7 +60,29 @@ router.post('/:id/start', (req, res) => {
     }
 
     db.prepare('UPDATE campaigns SET status = "running" WHERE id = ?').run(id);
-    // TODO: enqueue jobs to BullMQ
+    
+    // Enqueue jobs
+    const leads = db.prepare('SELECT * FROM campaign_leads WHERE campaign_id = ? AND status = "pending"').all(id);
+    const queueName = campaign.channel === 'email' ? 'emailQueue' 
+                    : campaign.channel === 'sms' ? 'smsQueue' 
+                    : 'rcsQueue';
+                    
+    const { Queue } = await import('bullmq');
+    const { default: IORedis } = await import('ioredis');
+    const connection = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379');
+    const campaignQueue = new Queue(queueName, { connection });
+    
+    for (const lead of leads) {
+      const jobData = {
+        campaignId: id,
+        leadId: lead.id,
+        templateId: campaign.template_id,
+        to: campaign.channel === 'email' ? lead.email : lead.mobile,
+        name: lead.name,
+        dataJson: lead.data_json
+      };
+      await campaignQueue.add(`job-${lead.id}`, jobData);
+    }
     
     res.json({ status: 'running', message: 'Campaign started' });
   } catch (error) {
